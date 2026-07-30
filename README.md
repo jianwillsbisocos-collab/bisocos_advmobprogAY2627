@@ -1,17 +1,12 @@
-# bisocos_advmobprog
+# Jian Wills M. Bisocos 
+## INF 233
+## CTADMOBL Advance Mobile Programming
 
-A new Flutter project.
+A flutter Project that focuses on advance topics. Covering the web to mobile transaction
 
-## Getting Started
+## Lab Activity Instance 
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Laboratory list 
+- **lab 1 - Theme (Dark/Light Mode)##:
+## Sa activity na ito, natutunan ko na ang Provider ay mas magandang gamitin sa pag-manage ng dark mode dahil isang shared state lang ang kino-control nito. Kapag binago ang theme, automatic itong naa-apply sa buong application nang hindi na kailangang gumamit ng setState() sa bawat screen.
