@@ -1,167 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
-/// Entry point ng application.
-void main() {
+import 'constants/constants.dart';
+import 'providers/theme_provider.dart';
+import 'screens/home_screen.dart';
+
+void main() async {
+  // Load environment variables from .env file
+  await dotenv.load(fileName: '.env');
+
   runApp(
     ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+      create: (_) => ThemeProvider(),
       child: const MyApp(),
     ),
   );
 }
 
-/// Nagha-handle ng theme state ng app gamit ang Provider.
-class ThemeProvider extends ChangeNotifier {
-  // Natutunan ko na mas madaling i-manage ang dark mode gamit ang Provider
-  // dahil accessible ito sa buong app.
-  bool _isDarkMode = false;
-
-  /// Ibinabalik ang current theme mode.
-  bool get isDarkMode => _isDarkMode;
-
-  /// Nagpapalit ng light at dark theme.
-  void toggleTheme(bool value) {
-    _isDarkMode = value;
-    notifyListeners();
-  }
-}
-
-/// Main widget ng application.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Ephemeral vs App State',
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
-          themeMode: themeProvider.isDarkMode
-              ? ThemeMode.dark
-              : ThemeMode.light,
-          home: const CounterScreen(),
-        );
-      },
-    );
-  }
-}
-
-/// First screen na nagpapakita ng Ephemeral State gamit ang setState().
-class CounterScreen extends StatefulWidget {
-  const CounterScreen({super.key});
-
-  @override
-  State<CounterScreen> createState() => _CounterScreenState();
-}
-
-class _CounterScreenState extends State<CounterScreen> {
-  int counter = 0;
-
-  /// Dinadagdagan ang counter value.
-  void incrementCounter() {
-    setState(() {
-      counter++;
-    });
-  }
-
-  /// Binabawasan ang counter value.
-  void decrementCounter() {
-    setState(() {
-      counter--;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Counter Screen'), centerTitle: true),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Counter Value', style: TextStyle(fontSize: 24)),
-            const SizedBox(height: 15),
-
-            Text(
-              '$counter',
-              style: const TextStyle(fontSize: 45, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 25),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: decrementCounter,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(48, 48),
-                    padding: EdgeInsets.zero,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  child: const Icon(Icons.remove_rounded, size: 22),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: incrementCounter,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(48, 48),
-                    padding: EdgeInsets.zero,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  child: const Icon(Icons.add_rounded, size: 22),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 30),
-
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ThemeScreen()),
-                );
-              },
-              child: const Text('Settings'),
-            ),
-          ],
+    final themeProvider = context.watch<ThemeProvider>();
+    return MaterialApp(
+      title: appTitle,
+      debugShowCheckedModeBanner: false,
+      themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+          brightness: Brightness.dark,
         ),
       ),
-    );
-  }
-}
-
-/// Second screen na nagpapakita ng App State gamit ang Provider.
-class ThemeScreen extends StatelessWidget {
-  const ThemeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), centerTitle: true),
-      body: Center(
-        child: SwitchListTile(
-          title: const Text('Dark Mode'),
-          subtitle: const Text('Toggle the application theme'),
-          value: themeProvider.isDarkMode,
-          onChanged: (value) {
-            themeProvider.toggleTheme(value);
-          },
-        ),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
