@@ -15,3 +15,6 @@ A flutter Project that focuses on advance topics. Covering the web to mobile tra
 
 - ** lab 3 - Cart API Integration with Provider Pattern
 ## Sa activity na ito, natutunan ko kung paano ikonekta ang Cart API gamit ang Provider. Mas naging madali ang pagpapasa ng data mula sa service papunta sa mga screen tulad ng detail_screen.dart dahil hiwalay na ang code para sa API at sa mismong design. Natutunan ko rin kung paano gamitin ang getById para makuha at maipakita agad ang tamang detalye ng isang item mula sa server.
+
+- ** lab 4 -  Laboratory Discussion: API Part III
+## Sa activity na ito, tinalakay natin ang mas malalim na integrasyon ng API, partikular kung paano nagkakausap ang User Model, Services, at Screen para i-render ang data, pati na rin ang paggamit ng updated design pattern at pag-handle ng cart data ayon sa user ID.

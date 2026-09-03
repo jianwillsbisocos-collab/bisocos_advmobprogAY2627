@@ -66,12 +66,67 @@ class CartProvider extends ChangeNotifier {
       if (_currentCart != null) {
         _carts = [_currentCart!];
       }
-      await fetchCartByUserId(userId);
     } catch (error) {
       _errorMessage = error.toString();
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void updateQuantity(int productId, int change) {
+    final cart = _currentCart;
+    if (cart == null || change == 0) return;
+
+    final updatedProducts = <CartProduct>[];
+    for (final product in cart.products) {
+      if (product.id != productId) {
+        updatedProducts.add(product);
+        continue;
+      }
+
+      final quantity = product.quantity + change;
+      if (quantity > 0) {
+        final total = product.price * quantity;
+        final discountedPrice = total * (1 - product.discountPercentage / 100);
+        updatedProducts.add(
+          CartProduct(
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            quantity: quantity,
+            total: total,
+            discountPercentage: product.discountPercentage,
+            discountedPrice: discountedPrice,
+            thumbnail: product.thumbnail,
+          ),
+        );
+      }
+    }
+
+    final total = updatedProducts.fold<double>(
+      0,
+      (sum, product) => sum + product.total,
+    );
+    final discountedTotal = updatedProducts.fold<double>(
+      0,
+      (sum, product) => sum + product.discountedPrice,
+    );
+    _currentCart = Cart(
+      id: cart.id,
+      userId: cart.userId,
+      products: updatedProducts,
+      total: total,
+      discountedTotal: discountedTotal,
+      totalProducts: updatedProducts.length,
+      totalQuantity: updatedProducts.fold<int>(
+        0,
+        (sum, product) => sum + product.quantity,
+      ),
+      isDeleted: cart.isDeleted,
+      deletedOn: cart.deletedOn,
+    );
+    _carts = [_currentCart!];
+    notifyListeners();
   }
 }

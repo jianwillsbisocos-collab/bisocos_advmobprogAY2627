@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants/constants.dart';
+import 'widgets/constants.dart';
+import 'screens/splash_screen.dart';
 import 'providers/cart_provider.dart';
 import 'providers/theme_provider.dart';
-import 'screens/home_screen.dart';
+import 'services/user_service.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // Load environment variables from .env file
   await dotenv.load(fileName: '.env');
+  final preferences = await SharedPreferences.getInstance();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        Provider(create: (_) => UserService(preferences: preferences)),
       ],
       child: const MyApp(),
     ),
@@ -43,7 +48,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }

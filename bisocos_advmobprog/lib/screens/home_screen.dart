@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../constants/constants.dart';
+import '../widgets/constants.dart';
 import '../models/product_model.dart';
 import '../services/product_service.dart';
 import 'cart_screen.dart';
 import 'product_detail_screen.dart';
 import 'product_screen.dart';
+import 'profile_screen.dart';
 import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,13 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       elevation: 8,
-      shadowColor: Colors.blue.withOpacity(0.4),
+      shadowColor: Colors.blue.withValues(alpha: 0.4),
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [primaryColor, primaryColor.withOpacity(0.8)],
+            colors: [primaryColor, primaryColor.withValues(alpha: 0.8)],
           ),
         ),
       ),
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
     body: _selectedIndex == 1
         ? const CartScreen()
         : _selectedIndex == 2
-        ? const SettingsScreen()
+        ? const ProfileScreen()
         : Column(
             children: [
               // Premium Search Bar Section
@@ -87,8 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      primaryColor.withOpacity(0.1),
-                      primaryColor.withOpacity(0.05),
+                      primaryColor.withValues(alpha: 0.1),
+                      primaryColor.withValues(alpha: 0.05),
                     ],
                   ),
                 ),
@@ -116,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide(
-                            color: primaryColor.withOpacity(0.3),
+                            color: primaryColor.withValues(alpha: 0.3),
                             width: 1.5,
                           ),
                         ),
@@ -141,13 +142,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: FutureBuilder<List<ProductModel>>(
                   future: _productsFuture,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting)
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation(primaryColor),
                         ),
                       );
-                    if (snapshot.hasError)
+                    }
+                    if (snapshot.hasError) {
                       return Center(
                         child: Padding(
                           padding: const EdgeInsets.all(24),
@@ -169,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       );
+                    }
                     final products = snapshot.data ?? [];
                     final filteredProducts = products
                         .where(
@@ -177,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                         .toList();
-                    if (filteredProducts.isEmpty)
+                    if (filteredProducts.isEmpty) {
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -192,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       );
+                    }
                     return ListView.builder(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                       itemCount: filteredProducts.length,

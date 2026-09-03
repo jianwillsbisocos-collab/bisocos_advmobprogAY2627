@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../constants/constants.dart';
+import '../widgets/constants.dart';
 import '../providers/theme_provider.dart';
-import 'cart_screen.dart';
 
 // Enhancement 3: Settings page
 class SettingsScreen extends StatelessWidget {

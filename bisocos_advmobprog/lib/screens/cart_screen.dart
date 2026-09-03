@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/cart.dart';
 import '../providers/cart_provider.dart';
 import 'detail_screen.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+  const CartScreen({this.userId, super.key});
+  final int? userId;
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  static const int _userId = 1;
+  int get _userId => widget.userId ?? 1;
 
   @override
   void initState() {
@@ -122,14 +122,11 @@ class _CartScreenState extends State<CartScreen> {
                                       width: 64,
                                       height: 64,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) =>
-                                          const SizedBox(
-                                            width: 64,
-                                            height: 64,
-                                            child: Icon(
-                                              Icons.image_not_supported,
-                                            ),
-                                          ),
+                                      errorBuilder: (_, _, _) => const SizedBox(
+                                        width: 64,
+                                        height: 64,
+                                        child: Icon(Icons.image_not_supported),
+                                      ),
                                     )
                                   : const SizedBox(
                                       width: 64,
@@ -175,7 +172,9 @@ class _CartScreenState extends State<CartScreen> {
                                     backgroundColor: Colors.amber,
                                   ),
                                   icon: const Icon(Icons.add, size: 18),
-                                  onPressed: () {},
+                                  onPressed: () => context
+                                      .read<CartProvider>()
+                                      .updateQuantity(product.id, 1),
                                 ),
                                 Text('${product.quantity}'),
                                 IconButton(
@@ -184,7 +183,9 @@ class _CartScreenState extends State<CartScreen> {
                                     backgroundColor: Colors.grey.shade200,
                                   ),
                                   icon: const Icon(Icons.remove, size: 18),
-                                  onPressed: () {},
+                                  onPressed: () => context
+                                      .read<CartProvider>()
+                                      .updateQuantity(product.id, -1),
                                 ),
                               ],
                             ),

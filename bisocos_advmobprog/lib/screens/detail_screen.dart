@@ -54,7 +54,7 @@ class DetailScreen extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: cart.products.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final product = cart.products[index];
 
@@ -72,7 +72,7 @@ class DetailScreen extends StatelessWidget {
                                   width: 72,
                                   height: 72,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => const Icon(
+                                  errorBuilder: (_, _, _) => const Icon(
                                     Icons.image_not_supported,
                                     size: 48,
                                   ),
