@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1064604167062",
+    "project_id": "advmobprog-firebase-2adff",
+    "storage_bucket": "advmobprog-firebase-2adff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064604167062:android:282c08bd508e1197438bb7",
+        "android_client_info": {
+          "package_name": "com.example.bisocos_advmobprog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtk4xJtGoWbBIcc1BnUNwyQqyBiJOme9k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
