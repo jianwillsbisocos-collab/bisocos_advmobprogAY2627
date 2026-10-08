@@ -1,33 +1,23 @@
-# Jian Wills M. Bisocos
+# Jian Wills M. Bisocos 
+## INF 233
+## CTADMOBL Advance Mobile Programming
 
-**Course:** INF 233
+A flutter Project that focuses on advance topics. Covering the web to mobile transaction
 
-**Subject:** CTADMOBL Advance Mobile Programming
+## Lab Activity Instance 
 
-This Flutter project explores advanced mobile development, including state management, API integration, and Firebase authentication.
+## Laboratory list 
+- **lab 1 - Theme (Dark/Light Mode)##:
+## Sa activity na ito, natutunan ko na ang Provider ay mas magandang gamitin sa pag-manage ng dark mode dahil isang shared state lang ang kino-control nito. Kapag binago ang theme, automatic itong naa-apply sa buong application nang hindi na kailangang gumamit ng setState() sa bawat screen.
 
-## Laboratory Activities
+**lab 2 - bulldog exhange (Dark/Light Mode)##:
+## Sa activity na ito, natutunan ko kung paano i-integrate ang Provider pattern sa isang mas complex na application tulad ng Bulldog Exchange. Natutunan ko rin kung paano panatilihing consistent ang UI ng iba't ibang components (tulad ng product cards, navigation, at forms) kapag nag-a-alternate sa pagitan ng Dark at Light Mode nang hindi naapektuhan ang Performance ng app.
 
-### Lab 1: Theme (Dark/Light Mode)
+- ** lab 3 - Cart API Integration with Provider Pattern
+## Sa activity na ito, natutunan ko kung paano ikonekta ang Cart API gamit ang Provider. Mas naging madali ang pagpapasa ng data mula sa service papunta sa mga screen tulad ng detail_screen.dart dahil hiwalay na ang code para sa API at sa mismong design. Natutunan ko rin kung paano gamitin ang getById para makuha at maipakita agad ang tamang detalye ng isang item mula sa server.
 
-I learned to use Provider for shared theme state. Changing the theme updates the entire application without calling `setState()` on each screen.
+- ** lab 4 -  Laboratory Discussion: API Part III
+## Sa activity na ito, tinalakay natin ang mas malalim na integrasyon ng API, partikular kung paano nagkakausap ang User Model, Services, at Screen para i-render ang data, pati na rin ang paggamit ng updated design pattern at pag-handle ng cart data ayon sa user ID.
 
-### Lab 2: Bulldog Exchange (Dark/Light Mode)
-
-I integrated Provider into a larger application and kept product cards, navigation, and forms consistent when switching between dark and light themes.
-
-### Lab 3: Cart API Integration with Provider
-
-I connected the Cart API through Provider and separated API services from the UI. This made it easier to retrieve an item by ID and show its details on the appropriate screen.
-
-### Lab 4: API Part III
-
-I explored how the user model, services, and screens work together to render data, and how cart data can be handled by user ID.
-
-### Lab 5: Firebase Authentication
-
-I compared DummyJSON's mock credential validation with Firebase's persistent authentication. The `UserService` centralizes user data and session state, while Firebase supports real accounts and cloud synchronization.
-
-## Local Configuration
-
-The Flutter app expects a local `.env` asset. Keep it in the app folder for local builds and tests; it is intentionally excluded from version control.
+- ** lab 5 - Firebase Authentication
+## Sa activity na ito, natutunan ko ang workflow ng dummyJSON kung saan nagpapadala ng credentials para mag-validate at magbalik ng mock token, samantalang sa Firebase naman ay nagkakaroon ng tunay at persistent na authentication. Ang main idea ng UserService ay magsilbing sentralisadong tagapamahala ng user data at session state sa pagitan ng app at backend services. Dahil sa pag-integrate ng Firebase sa ating Flutter application, naging mas ligtas ang pag-handle ng totoong user accounts at mas madaling mai-sync ang user data sa cloud kumpara sa paggamit ng static dummy responses.
