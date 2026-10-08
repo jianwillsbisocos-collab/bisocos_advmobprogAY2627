@@ -4,6 +4,7 @@ import 'package:bisocos_advmobprogay2627/providers/cart_provider.dart';
 import 'package:bisocos_advmobprogay2627/providers/theme_provider.dart';
 import 'package:bisocos_advmobprogay2627/screens/product_detail_screen.dart';
 import 'package:bisocos_advmobprogay2627/services/user_service.dart';
+import 'package:bisocos_advmobprogay2627/widgets/auth_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -50,5 +51,30 @@ void main() {
     );
 
     expect(find.text('Add to Cart'), findsOneWidget);
+  });
+
+  testWidgets('password dialog closes without disposing a mounted field', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showPasswordDialog(context),
+              child: const Text('Open password dialog'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Open password dialog'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), 'test-password');
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
   });
 }

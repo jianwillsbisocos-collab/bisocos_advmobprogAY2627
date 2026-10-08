@@ -1,58 +1,110 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../widgets/constants.dart';
-import '../models/user.dart';
+import '../constants.dart';
 import '../models/cart.dart';
+import '../models/user_model.dart';
 
 class UserService {
-  UserService({required this._preferences, http.Client? client})
-    : _client = client ?? http.Client();
+  UserService({
+    required this._preferences,
+    http.Client? client,
+    this._auth,
+    this._firestore,
+  }) : _client = client ?? http.Client();
 
   static const _savedUserKey = 'authenticated_user';
   final SharedPreferences _preferences;
+  final FirebaseAuth? _auth;
+  final FirebaseFirestore? _firestore;
   final http.Client _client;
+
+  FirebaseAuth get _firebaseAuth => _auth ?? FirebaseAuth.instance;
+  FirebaseFirestore get _database => _firestore ?? FirebaseFirestore.instance;
+  User? get currentUser => _firebaseAuth.currentUser;
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   String get _baseUrl => getCartHost();
 
-  Future<User> login({
-    required String username,
-    required String password,
-  }) async {
-    final response = await _client
-        .post(
-          Uri.parse('$_baseUrl/auth/login'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'username': username, 'password': password}),
-        )
-        .timeout(const Duration(seconds: 10));
-    if (response.statusCode != 200) {
-      throw Exception('Invalid username or password.');
+  Future<UserCredential?> signIn(String email, String password) => _firebaseAuth
+      .signInWithEmailAndPassword(email: email.trim(), password: password);
+
+  Future<UserCredential?> createAccount(String email, String password) async =>
+      _firebaseAuth.createUserWithEmailAndPassword(
+        email: email.trim(),
+        password: password,
+      );
+
+  Future<void> saveUserData(UserModel profile) async {
+    final user = currentUser;
+    if (user == null) throw StateError('Sign in before saving a profile.');
+    await user.updateDisplayName(profile.username);
+    await _database.collection('users').doc(user.uid).set(profile.toMap());
+  }
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+    await _preferences.remove(_savedUserKey);
+  }
+
+  Future<void> updateUsername(String username) async {
+    final user = currentUser;
+    if (user == null) throw StateError('You must be signed in.');
+    await user.updateDisplayName(username.trim());
+    await _database.collection('users').doc(user.uid).set({
+      'username': username.trim(),
+    }, SetOptions(merge: true));
+  }
+
+  Future<void> updatePassword(String password) async {
+    final user = currentUser;
+    if (user == null) throw StateError('You must be signed in.');
+    await user.updatePassword(password);
+  }
+
+  Future<void> resetPassword(String email) =>
+      _firebaseAuth.sendPasswordResetEmail(email: email.trim());
+
+  Future<void> reauthenticate(String password) async {
+    final user = currentUser;
+    final email = user?.email;
+    if (user == null || email == null) {
+      throw StateError('A signed-in email/password account is required.');
     }
-    final user = User.fromJson(
-      jsonDecode(response.body) as Map<String, dynamic>,
+    final credential = EmailAuthProvider.credential(
+      email: email,
+      password: password,
     );
-    await saveUser(user);
-    return user;
+    await user.reauthenticateWithCredential(credential);
   }
 
-  Future<void> saveUser(User user) async {
-    await _preferences.setString(_savedUserKey, jsonEncode(user.toJson()));
+  Future<void> deleteAccount() async {
+    final user = currentUser;
+    if (user == null) throw StateError('You must be signed in.');
+    await _database.collection('users').doc(user.uid).delete();
+    await user.delete();
+    await _preferences.remove(_savedUserKey);
   }
 
-  User? getSavedUser() {
-    final saved = _preferences.getString(_savedUserKey);
-    if (saved == null) return null;
-    try {
-      return User.fromJson(jsonDecode(saved) as Map<String, dynamic>);
-    } on FormatException {
-      return null;
-    }
+  Future<Map<String, dynamic>> getUserData() async {
+    final user = currentUser;
+    if (user == null) throw StateError('You must be signed in.');
+    final snapshot = await _database.collection('users').doc(user.uid).get();
+    return {
+      'uid': user.uid,
+      'firstName': '',
+      'lastName': '',
+      'age': 0,
+      'contactNumber': '',
+      'username': user.displayName ?? '',
+      'email': user.email ?? '',
+      ...?snapshot.data(),
+    };
   }
-
-  Future<void> logout() => _preferences.remove(_savedUserKey);
 
   Future<List<Cart>> fetchCartsByUserId(int userId) async {
     final response = await _client

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/constants.dart';
+import '../constants.dart';
 import '../models/product_model.dart';
-import '../custom_text.dart';
+import '../widgets/custom_text.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({required this.product, required this.onTap, super.key});

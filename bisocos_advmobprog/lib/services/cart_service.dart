@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../widgets/constants.dart';
+import '../constants.dart';
 import '../models/cart.dart';
 
 class CartService {

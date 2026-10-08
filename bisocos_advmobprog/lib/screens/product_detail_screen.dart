@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/constants.dart';
+import '../constants.dart';
 import '../models/product_model.dart';
 import '../providers/cart_provider.dart';
-import '../custom_text.dart';
+import '../widgets/custom_text.dart';
 
 // Enhancement 2: Product detail page
 class ProductDetailScreen extends StatelessWidget {

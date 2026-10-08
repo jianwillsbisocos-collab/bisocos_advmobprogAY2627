@@ -29,9 +29,9 @@ class _SignInScreenState extends State<SignInScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      await context.read<UserService>().login(
-        username: _usernameController.text.trim(),
-        password: _passwordController.text,
+      await context.read<UserService>().signIn(
+        _usernameController.text.trim(),
+        _passwordController.text,
       );
       if (mounted) {
         Navigator.of(context).pushReplacement(
